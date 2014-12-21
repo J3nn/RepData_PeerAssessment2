@@ -1,9 +1,6 @@
----
-title: 'Peer Assessment 2: Impact of severe weather events on public health and economy
-  in the USA'
-author: "Jenny"
 
----
+# Peer Assessment 2: Impact of severe weather events on public health and economy in the USA
+
 # Synopsis
 
 Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern.
@@ -14,7 +11,7 @@ This project involves exploring the U.S. National Oceanic and Atmospheric Admini
 
 ## Raw data
 
-The data for this assignment come in the form of a comma-separated-value file compressed via the bzip2 algorithm The file can be downloaded by clicking [here] (https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2).
+The data for this assignment come in the form of a comma-separated-value file compressed via the bzip2 algorithm. The file can be downloaded by clicking [here] (https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2).
 There is also some documentation of the database available to find how some of the variables are constructed/defined:
 * [Storm Data Documentation] (https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf) from the National Weather Service
 * [FAQ] (https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf) from the National Climatic Data Centre Storm Events
@@ -48,32 +45,12 @@ Filter the dataset to keep only the variables relevant for our analysis, as well
 
 ```r
 names(stormdata)
-```
 
-```
-##  [1] "STATE__"    "BGN_DATE"   "BGN_TIME"   "TIME_ZONE"  "COUNTY"    
-##  [6] "COUNTYNAME" "STATE"      "EVTYPE"     "BGN_RANGE"  "BGN_AZI"   
-## [11] "BGN_LOCATI" "END_DATE"   "END_TIME"   "COUNTY_END" "COUNTYENDN"
-## [16] "END_RANGE"  "END_AZI"    "END_LOCATI" "LENGTH"     "WIDTH"     
-## [21] "F"          "MAG"        "FATALITIES" "INJURIES"   "PROPDMG"   
-## [26] "PROPDMGEXP" "CROPDMG"    "CROPDMGEXP" "WFO"        "STATEOFFIC"
-## [31] "ZONENAMES"  "LATITUDE"   "LONGITUDE"  "LATITUDE_E" "LONGITUDE_"
-## [36] "REMARKS"    "REFNUM"
-```
-
-```r
 ## Extract relevant variables
 
 newdata = stormdata[c(8,23:28)]
 names(newdata)
-```
 
-```
-## [1] "EVTYPE"     "FATALITIES" "INJURIES"   "PROPDMG"    "PROPDMGEXP"
-## [6] "CROPDMG"    "CROPDMGEXP"
-```
-
-```r
 ## Remove rows that have 0 in the "Fatalities", "Injuries", "Propdmg" and "Cropdmg" variables
 
 newdata = newdata[!(newdata$FATALITIES == 0 & newdata$INJURIES == 0 & newdata$PROPDMG == 0 & newdata$CROPDMG == 0), ]
@@ -105,13 +82,6 @@ EXPfunction = function(e) {
 }
 
 propdmgexp = sapply(newdata$PROPDMGEXP, FUN=EXPfunction)
-```
-
-```
-## Warning: closing unused connection 5 (stormdata.csv.bz2)
-```
-
-```r
 newdata$PROPDMG = newdata$PROPDMG * (10 ** propdmgexp)
 cropdmgexp = sapply(newdata$CROPDMGEXP, FUN=EXPfunction)
 newdata$CROPDMG = newdata$CROPDMG * (10 ** cropdmgexp)
@@ -129,7 +99,13 @@ library(plyr)
 casualties = ddply(newdata, .(EVTYPE), summarize,
                   Fatalities = sum(FATALITIES),
                   Injuries = sum(INJURIES))
+```
 
+```
+## Warning: closing unused connection 5 (stormdata.csv.bz2)
+```
+
+```r
 fatality = head(casualties[order(casualties$Fatalities, decreasing = T), ], 10)
 injury = head(casualties[order(casualties$Injuries, decreasing = T), ], 10)
 
@@ -257,7 +233,7 @@ e2 = ggplot(data=cropdmg,
       xlab("Event type") +
       theme(legend.position="none")
 
-grid.arrange(p1, p2, main = "Top harmful weather events with respect to economic consequences in the USA (1950-2011)" )
+grid.arrange(e1, e2, main = "Top harmful weather events with respect to economic consequences in the USA (1950-2011)" )
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
