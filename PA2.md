@@ -31,15 +31,6 @@ Read the data into a dataframe.
 stormdata = read.csv(bzfile("stormdata.csv.bz2"))
 ```
 
-```
-## Warning in open.connection(file, "rt"): cannot open bzip2-ed file
-## 'stormdata.csv.bz2', probable reason 'No such file or directory'
-```
-
-```
-## Error in open.connection(file, "rt"): cannot open the connection
-```
-
 Filter the dataset to keep only the variables relevant for our analysis, as well as remove rows that do not show meaningful data.
 
 
@@ -99,13 +90,7 @@ library(plyr)
 casualties = ddply(newdata, .(EVTYPE), summarize,
                   Fatalities = sum(FATALITIES),
                   Injuries = sum(INJURIES))
-```
 
-```
-## Warning: closing unused connection 5 (stormdata.csv.bz2)
-```
-
-```r
 fatality = head(casualties[order(casualties$Fatalities, decreasing = T), ], 10)
 injury = head(casualties[order(casualties$Injuries, decreasing = T), ], 10)
 
@@ -237,4 +222,5 @@ grid.arrange(e1, e2, main = "Top harmful weather events with respect to economic
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
-From the analysis above, 
+
+From the analysis above, we can conclude that **tornados** are the deadliest events from 1950 to 2011 with respect to population health, resulting in the highest number of fatalities and injuries of all event types. On the other hand, **flash floods** brought about the most property damages while **droughts** brought about the most crop damages in the same period.
